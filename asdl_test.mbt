@@ -51,3 +51,9 @@ test "tokenize with comments" {
     ),
   )
 }
+
+///|
+test "panic tokenize unknown symbol" {
+  let code = "foo @"
+  let _ = @asdl.tokenize(code)
+}
