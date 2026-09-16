@@ -32,6 +32,7 @@ pub suberror TokenizeError {
 }
 
 ///|
+/// Get the next token, or `None` if the input is exhausted.
 fn next_token(scanner : @lexbuf.StringScanner) -> Token? raise TokenizeError {
   lexscan scanner {
     re"^[a-z][a-zA-Z0-9_]*" as id => Some(TypeId(id))
