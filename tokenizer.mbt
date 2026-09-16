@@ -37,11 +37,14 @@ fn next_token(scanner : @lexbuf.StringScanner) -> Token? raise TokenizeError {
   lexscan scanner {
     re"^[a-z][a-zA-Z0-9_]*" as id => Some(TypeId(id))
     re"^[A-Z][a-zA-Z0-9_]*" as id => Some(ConstructorId(id))
-    re"^[=,?|()*{}]" as operator => Some(operator_table[operator])
     re"^[[:space:]]+" => next_token(scanner)
     re"^--[^\n]*\n?" => next_token(scanner)
+    re"^." as symbol =>
+      match operator_table.get(symbol) {
+        Some(operator) => Some(operator)
+        None => raise TokenizeError::UnknownSymbol(symbol)
+      }
     re"^$" => None
-    re"^." as symbol => raise UnknownSymbol(symbol)
   }
 }
 
