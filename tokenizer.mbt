@@ -11,7 +11,6 @@ pub enum Token {
   Asterisk
   LBrace
   RBrace
-  Eof
 } derive(Debug)
 
 ///|
@@ -33,14 +32,14 @@ pub suberror TokenizeError {
 }
 
 ///|
-fn next_token(scanner : @lexbuf.StringScanner) -> Token raise TokenizeError {
+fn next_token(scanner : @lexbuf.StringScanner) -> Token? raise TokenizeError {
   lexscan scanner {
-    re"^[a-z][a-zA-Z0-9_]*" as id => TypeId(id)
-    re"^[A-Z][a-zA-Z0-9_]*" as id => ConstructorId(id)
-    re"^[=,?|()*{}]" as operator => operator_table[operator]
+    re"^[a-z][a-zA-Z0-9_]*" as id => Some(TypeId(id))
+    re"^[A-Z][a-zA-Z0-9_]*" as id => Some(ConstructorId(id))
+    re"^[=,?|()*{}]" as operator => Some(operator_table[operator])
     re"^[[:space:]]+" => next_token(scanner)
     re"^--[^\n]*\n?" => next_token(scanner)
-    re"^$" => Eof
+    re"^$" => None
     re"^." as symbol => raise UnknownSymbol(symbol)
   }
 }
@@ -51,8 +50,8 @@ pub fn tokenize(code : StringView) -> Array[Token] raise TokenizeError {
   let tokens : Array[Token] = []
   while true {
     match next_token(scanner) {
-      Eof => break
-      token => tokens.push(token)
+      Some(token) => tokens.push(token)
+      None => break
     }
   }
   tokens
