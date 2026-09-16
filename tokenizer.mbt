@@ -30,8 +30,8 @@ let operator_table : Map[Char, Token] = {
 ///|
 fn next_token(code : @lexbuf.StringScanner) -> Token {
   lexscan code {
-    re"^[a-z][a-zA-Z0-9]*" as id => TypeId(id)
-    re"^[A-Z][a-zA-Z0-9]*" as id => ConstructorId(id)
+    re"^[a-z][a-zA-Z0-9_]*" as id => TypeId(id)
+    re"^[A-Z][a-zA-Z0-9_]*" as id => ConstructorId(id)
     re"^[=,?|()*{}]" as operator => operator_table[operator]
     re"^[[:space:]]+" => next_token(code)
     re"^--[^\n]*\n?" => next_token(code)
