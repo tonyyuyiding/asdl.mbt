@@ -10,21 +10,12 @@ pub struct Module {
 
 ///|
 pub enum Definition {
-  Product(Product)
-  Sum(Sum)
-}
-
-///|
-pub struct Product {
-  name : Typeid
-  fields : Array[Field]
-}
-
-///|
-pub struct Sum {
-  name : Typeid
-  constructors : Array[Constructor]
-  attributes : Array[Field]
+  Product(name~ : Typeid, fields~ : Array[Field])
+  Sum(
+    name~ : Typeid,
+    constructors~ : Array[Constructor],
+    attributes~ : Array[Field]
+  )
 }
 
 ///|
