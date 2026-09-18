@@ -1,5 +1,5 @@
 ///|
-pub enum Token {
+pub(all) enum Token {
   TypeId(StringView)
   ConstructorId(StringView)
   Equals
@@ -11,7 +11,7 @@ pub enum Token {
   Asterisk
   LBrace
   RBrace
-} derive(Debug)
+} derive(Debug, Eq)
 
 ///|
 let operator_table : Map[Char, Token] = {
