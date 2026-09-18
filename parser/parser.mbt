@@ -57,6 +57,7 @@ fn parse_module(scanner : Scanner) -> Module raise ParseError {
     TypeId(id) | ConstructorId(id) => id
     _ => raise ParseError::UnexpectedToken(scanner.front())
   }
+  scanner.advance()
   scanner.consume(LBrace)
   let definitions : Array[Definition] = []
   while scanner.front() != RBrace {
@@ -75,6 +76,7 @@ fn parse_definition(scanner : Scanner) -> Definition raise ParseError {
   guard scanner.front() is TypeId(name) else {
     raise ParseError::UnexpectedToken(scanner.front())
   }
+  scanner.advance()
   scanner.consume(Equals)
   match scanner.front() {
     LParen => {
@@ -110,6 +112,7 @@ fn parse_constructor(scanner : Scanner) -> Constructor raise ParseError {
   guard scanner.front() is ConstructorId(name) else {
     raise ParseError::UnexpectedToken(scanner.front())
   }
+  scanner.advance()
   let fields = match scanner.front() {
     LParen => parse_fields(scanner)
     _ => []
@@ -139,6 +142,7 @@ fn parse_field(scanner : Scanner) -> Field raise ParseError {
   guard scanner.front() is TypeId(type_) else {
     raise ParseError::UnexpectedToken(scanner.front())
   }
+  scanner.advance()
   let quant = match scanner.front() {
     Question => {
       scanner.advance()
