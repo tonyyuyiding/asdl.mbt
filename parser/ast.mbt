@@ -1,6 +1,5 @@
 ///|
-/// Built-in types
-pub type Identifier = StringView
+pub type Identifier = StringView // asdl built-in type
 
 ///|
 pub struct Module {
