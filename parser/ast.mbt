@@ -1,6 +1,6 @@
 ///|
 /// Built-in types
-pub type Identifier = String
+pub type Identifier = StringView
 
 ///|
 pub struct Module {
