@@ -1,5 +1,5 @@
 ///|
-using @tokenizer {type Token}
+using @lexer {type Token}
 
 ///|
 pub fn parse_tokens(tokens : Array[Token]) -> Module raise ParseError {
