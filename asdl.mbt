@@ -1,2 +1,2 @@
 ///|
-pub using @tokenizer {tokenize, type Token}
+pub using @lexer {tokenize, type Token}
