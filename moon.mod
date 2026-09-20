@@ -8,8 +8,13 @@ repository = ""
 
 license = "MIT"
 
-keywords = []
+keywords = [ ]
 
-preferred_target = "wasm"
+preferred_target = "native"
 
 description = ""
+
+import {
+  "moonbitlang/parser@0.3.19",
+  "moonbitlang/x@0.5.5",
+}

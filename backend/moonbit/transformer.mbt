@@ -1,5 +1,5 @@
 ///|
-pub fn transform_module(module_ : @asdl.Module) -> AST {
+fn transform_module(module_ : @asdl.Module) -> AST {
   let definitions = [
     TypeAlias(alias_="Identifier", type_="StringView"),
     ..module_.definitions.map(transform_definition).flatten(),
