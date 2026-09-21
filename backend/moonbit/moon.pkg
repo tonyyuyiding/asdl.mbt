@@ -1,0 +1,4 @@
+import {
+  "moonbitlang/parser/fmt",
+  "tonyyuyiding/asdl/parser" @asdl,
+}

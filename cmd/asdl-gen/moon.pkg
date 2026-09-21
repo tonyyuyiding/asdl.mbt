@@ -1,0 +1,13 @@
+import {
+  "moonbitlang/core/argparse",
+  "moonbitlang/x/fs",
+  "tonyyuyiding/asdl/lexer",
+  "tonyyuyiding/asdl/parser",
+  "tonyyuyiding/asdl/backend",
+}
+
+pkgtype(kind: "executable")
+
+options(
+  supported_target: [ "native" ],
+)
