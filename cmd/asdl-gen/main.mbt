@@ -20,6 +20,7 @@ fn main raise {
   let raw = @fs.read_file_to_string(filename)
   let tokens = @lexer.tokenize(raw)
   let module_ = @parser.parse_tokens(tokens)
+  @checker.check_types(module_)
   let code = emit(module_)
   match args.get("output") {
     Some([output]) => @fs.write_string_to_file(output, code)
