@@ -22,12 +22,12 @@ fn transform_product(
   fields : Array[@asdl.Field],
 ) -> Array[Definition] {
   if fields.all(field => field.name is None) {
-    let fields = fields.map(field => field.type_)
+    let fields = fields.map(field => translate_type(field.type_, field.quant))
     [TupleStruct(name~, fields~)]
   } else {
     let fields = fields.mapi((i, field) => StructField::{
       name: field.name.unwrap_or("_\{i}"),
-      type_: field.type_,
+      type_: translate_type(field.type_, field.quant),
     })
     [Struct(name~, fields~)]
   }
@@ -48,7 +48,7 @@ fn transform_sum(
       StructField::{ name: "kind", type_: enum_name, },
       ..attributes.mapi((i, field) => StructField::{
         name: field.name.unwrap_or("_\{i}"),
-        type_: field.type_,
+        type_: translate_type(field.type_, field.quant),
       }),
     ]
     [Enum(name=enum_name, cases~), Struct(name~, fields~)]

@@ -35,6 +35,7 @@ fn Definition::write(self : Self, builder : StringBuilder) -> Unit {
       for field in fields {
         builder.write_string("\{field},")
       }
+      builder.write_string(") derive(Debug)\n")
     }
     TypeAlias(alias_~, type_~) =>
       builder.write_string("pub type \{alias_} = \{type_}\n")
