@@ -11,7 +11,10 @@ pub(all) enum Token {
   Asterisk
   LBrace
   RBrace
-} derive(Debug, Eq)
+} derive(Eq)
+
+///|
+pub extend Token with Eq::{not_equal, equal}
 
 ///|
 let operator_table : Map[Char, Token] = {
