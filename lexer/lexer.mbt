@@ -14,6 +14,12 @@ pub(all) enum Token {
 } derive(Debug, Eq)
 
 ///|
+pub extend Token with @debug.Debug::{to_repr}
+
+///|
+pub extend Token with Eq::{not_equal, equal}
+
+///|
 let operator_table : Map[Char, Token] = {
   '=': Equals,
   ',': Comma,
