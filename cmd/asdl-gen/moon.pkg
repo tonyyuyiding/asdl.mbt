@@ -1,6 +1,7 @@
 import {
   "moonbitlang/core/argparse",
   "moonbitlang/x/fs",
+  "tonyyuyiding/asdl/checker",
   "tonyyuyiding/asdl/lexer",
   "tonyyuyiding/asdl/parser",
   "tonyyuyiding/asdl/backend",
