@@ -21,13 +21,16 @@ fn transform_product(
   name : @asdl.Typeid,
   fields : Array[@asdl.Field],
 ) -> Array[Definition] {
+  let name = transform_type_name(name, None)
   if fields.all(field => field.name is None) {
-    let fields = fields.map(field => translate_type(field.type_, field.quant))
+    let fields = fields.map(field => {
+      transform_type_name(field.type_, field.quant)
+    })
     [TupleStruct(name~, fields~)]
   } else {
     let fields = fields.mapi((i, field) => StructField::{
-      name: field.name.unwrap_or("_\{i}"),
-      type_: translate_type(field.type_, field.quant),
+      name: field.name.unwrap_or("_\{i}") |> transform_field_name,
+      type_: transform_type_name(field.type_, field.quant),
     })
     [Struct(name~, fields~)]
   }
@@ -39,6 +42,7 @@ fn transform_sum(
   constructors : Array[@asdl.Constructor],
   attributes : Array[@asdl.Field],
 ) -> Array[Definition] {
+  let name = transform_type_name(name, None)
   let cases = constructors.map(transform_constructor)
   if attributes.is_empty() {
     [Enum(name~, cases~)]
@@ -47,8 +51,8 @@ fn transform_sum(
     let fields = [
       StructField::{ name: "kind", type_: enum_name, },
       ..attributes.mapi((i, field) => StructField::{
-        name: field.name.unwrap_or("_\{i}"),
-        type_: translate_type(field.type_, field.quant),
+        name: field.name.unwrap_or("_\{i}") |> transform_field_name,
+        type_: transform_type_name(field.type_, field.quant),
       }),
     ]
     [Enum(name=enum_name, cases~), Struct(name~, fields~)]
@@ -58,20 +62,29 @@ fn transform_sum(
 ///|
 fn transform_constructor(constructor_ : @asdl.Constructor) -> EnumCase {
   let payload = constructor_.fields.map(field => EnumCaseField::{
-    name: field.name,
-    type_: translate_type(field.type_, field.quant),
+    name: field.name.map(transform_field_name),
+    type_: transform_type_name(field.type_, field.quant),
   })
   EnumCase::{ name: constructor_.name, payload, }
 }
 
 ///|
-fn translate_type(
-  type_ : @asdl.Typeid,
+fn transform_type_name(
+  name : @asdl.Typeid,
   quant : @asdl.Quantifier?,
 ) -> StringView {
+  let name = name[0:1].to_upper() + name[1:]
   match quant {
-    None => type_
-    Some(Optional) => "\{type_}?"
-    Some(Sequence) => "Array[\{type_}]"
+    None => name
+    Some(Optional) => "\{name}?"
+    Some(Sequence) => "Array[\{name}]"
+  }
+}
+
+///|
+fn transform_field_name(name : StringView) -> StringView {
+  match name {
+    "type" => "type_"
+    _ => name
   }
 }
