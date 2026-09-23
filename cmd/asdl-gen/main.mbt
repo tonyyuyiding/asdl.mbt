@@ -17,9 +17,10 @@ fn main raise {
     "moonbit" => @backend.emit_moonbit
     _ => abort("Unsupported target: \{target}")
   }
-  let raw = @fs.read_file_to_string(filename)
-  let tokens = @lexer.tokenize(raw)
-  let module_ = @parser.parse_tokens(tokens)
+  let module_ = filename
+    |> @fs.read_file_to_string
+    |> @lexer.tokenize
+    |> @parser.parse_tokens
   @checker.check_types(module_)
   let code = emit(module_)
   match args.get("output") {
