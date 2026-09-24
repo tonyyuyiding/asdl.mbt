@@ -83,8 +83,31 @@ fn transform_type_name(
 
 ///|
 fn transform_field_name(name : StringView) -> StringView {
-  match name {
-    "type" => "type_"
-    _ => name
+  if keywords.contains(name) || reserved_keywords.contains(name) {
+    "\{name}_"
+  } else {
+    name
   }
 }
+
+///|
+let keywords : ReadOnlyArray[StringView] = [
+  "as", "else", "extern", "fn", "if", "let", "const", "match", "using", "mut", "type",
+  "struct", "enum", "extenum", "trait", "derive", "while", "break", "continue", "import",
+  "return", "throw", "raise", "try", "catch", "pub", "priv", "proof_assert", "proof_let",
+  "readonly", "true", "false", "_", "test", "loop", "for", "in", "impl", "with",
+  "guard", "async", "is", "suberror", "and", "letrec", "enumview", "noraise", "nocancel",
+  "defer", "lexmatch", "lexscan", "where", "declare", "nobreak",
+]
+
+///|
+let reserved_keywords : ReadOnlyArray[StringView] = [
+  "module", "move", "ref", "static", "super", "unsafe", "use", "await", "dyn", "abstract",
+  "do", "final", "macro", "override", "typeof", "virtual", "yield", "local", "method",
+  "alias", "assert", "package", "recur", "using", "enumview", "isnot", "define",
+  "downcast", "inherit", "member", "namespace", "static", "upcast", "use", "void",
+  "lazy", "include", "mixin", "protected", "sealed", "constructor", "atomic", "volatile",
+  "anyframe", "anytype", "asm", "await", "comptime", "errdefer", "export", "opaque",
+  "orelse", "resume", "threadlocal", "unreachable", "dynclass", "dynobj", "dynrec",
+  "var", "finally", "noasync", "assume", "extend",
+]
