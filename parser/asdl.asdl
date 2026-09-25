@@ -1,0 +1,12 @@
+module ASDL {
+    module = (identifier name, definition* definitions)
+
+    definition = Product(identifier name, field* fields)
+               | Sum(identifier name, constructor* constructors, field* attributes)
+
+    constructor = (identifier name, field* fields)
+
+    field = (identifier type, quantifier? quant, identifier? name)
+
+    quantifier = Optional | Sequence
+}

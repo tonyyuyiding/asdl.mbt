@@ -1,43 +1,52 @@
 ///|
-pub type Identifier = StringView // asdl built-in type
+pub type Identifier = StringView
 
 ///|
-pub struct Module {
+pub(all) struct Module {
   name : Identifier
   definitions : Array[Definition]
-}
+} derive(Debug)
 
 ///|
-pub enum Definition {
-  Product(name~ : Typeid, fields~ : Array[Field])
+pub extend Module with Debug::{to_repr}
+
+///|
+pub(all) enum Definition {
+  Product(name~ : Identifier, fields~ : Array[Field])
   Sum(
-    name~ : Typeid,
+    name~ : Identifier,
     constructors~ : Array[Constructor],
     attributes~ : Array[Field]
   )
-}
+} derive(Debug)
 
 ///|
-pub struct Constructor {
-  name : Constructorid
+pub extend Definition with Debug::{to_repr}
+
+///|
+pub(all) struct Constructor {
+  name : Identifier
   fields : Array[Field]
-}
+} derive(Debug)
 
 ///|
-pub struct Field {
-  type_ : Typeid
+pub extend Constructor with Debug::{to_repr}
+
+///|
+pub(all) struct Field {
+  type_ : Identifier
   quant : Quantifier?
   name : Identifier?
-}
+} derive(Debug)
 
 ///|
-pub enum Quantifier {
+pub extend Field with Debug::{to_repr}
+
+///|
+pub(all) enum Quantifier {
   Optional
   Sequence
-}
+} derive(Debug)
 
 ///|
-pub type Typeid = Identifier
-
-///|
-pub type Constructorid = Identifier
+pub extend Quantifier with Debug::{to_repr}

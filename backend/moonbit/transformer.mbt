@@ -18,7 +18,7 @@ fn transform_definition(definition : @asdl.Definition) -> Array[Definition] {
 
 ///|
 fn transform_product(
-  name : @asdl.Typeid,
+  name : @asdl.Identifier,
   fields : Array[@asdl.Field],
 ) -> Array[Definition] {
   let name = transform_type_name(name, None)
@@ -38,7 +38,7 @@ fn transform_product(
 
 ///|
 fn transform_sum(
-  name : @asdl.Typeid,
+  name : @asdl.Identifier,
   constructors : Array[@asdl.Constructor],
   attributes : Array[@asdl.Field],
 ) -> Array[Definition] {
@@ -70,7 +70,7 @@ fn transform_constructor(constructor_ : @asdl.Constructor) -> EnumCase {
 
 ///|
 fn transform_type_name(
-  name : @asdl.Typeid,
+  name : @asdl.Identifier,
   quant : @asdl.Quantifier?,
 ) -> StringView {
   let name = name[0:1].to_upper() + name[1:]
