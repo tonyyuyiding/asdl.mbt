@@ -22,6 +22,7 @@ fn Definition::write(self : Self, builder : StringBuilder) -> Unit {
         field.write(builder)
       }
       builder.write_string("} derive(Debug)\n")
+      builder.write_extend_with_debug(name)
     }
     Enum(name~, cases~) => {
       builder.write_string("pub(all) enum \{name} {\n")
@@ -29,6 +30,7 @@ fn Definition::write(self : Self, builder : StringBuilder) -> Unit {
         case.write(builder)
       }
       builder.write_string("} derive(Debug)\n")
+      builder.write_extend_with_debug(name)
     }
     TupleStruct(name~, fields~) => {
       builder.write_string("pub(all) struct \{name} (")
@@ -36,6 +38,7 @@ fn Definition::write(self : Self, builder : StringBuilder) -> Unit {
         builder.write_string("\{field},")
       }
       builder.write_string(") derive(Debug)\n")
+      builder.write_extend_with_debug(name)
     }
     TypeAlias(alias_~, type_~) =>
       builder.write_string("pub type \{alias_} = \{type_}\n")
@@ -66,4 +69,12 @@ fn EnumCaseField::write(self : Self, builder : StringBuilder) -> Unit {
     builder.write_string("\{name}~ : ")
   }
   builder.write_string("\{self.type_},")
+}
+
+///|
+fn StringBuilder::write_extend_with_debug(
+  self : Self,
+  name : StringView,
+) -> Unit {
+  self.write_string("pub extend \{name} with Debug::{to_repr}\n")
 }

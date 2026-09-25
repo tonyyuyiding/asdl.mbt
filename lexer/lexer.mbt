@@ -14,7 +14,7 @@ pub(all) enum Token {
 } derive(Debug, Eq)
 
 ///|
-pub extend Token with @debug.Debug::{to_repr}
+pub extend Token with Debug::{to_repr}
 
 ///|
 pub extend Token with Eq::{not_equal, equal}
