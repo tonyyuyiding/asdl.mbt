@@ -1,3 +1,14 @@
 import {
   "tonyyuyiding/asdl/lexer",
 }
+
+import {
+  "moonbitlang/x/fs",
+  "moonbitlang/parser/fmt",
+  "tonyyuyiding/asdl/parser",
+  "tonyyuyiding/asdl/backend",
+} for "test"
+
+options(
+  targets: { "asdl_files_test.mbt": [ "native" ] },
+)
