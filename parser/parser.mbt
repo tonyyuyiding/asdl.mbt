@@ -1,5 +1,5 @@
 ///|
-using @lexer {type Token}
+using @lexer {type Token, type TokenBody}
 
 ///|
 pub fn parse_tokens(tokens : Array[Token]) -> Module raise ParseError {
@@ -42,8 +42,8 @@ fn Scanner::advance(self : Self) -> Unit raise ParseError {
 }
 
 ///|
-fn Scanner::consume(self : Self, expected : Token) -> Unit raise ParseError {
-  if self.front() == expected {
+fn Scanner::consume(self : Self, expected : TokenBody) -> Unit raise ParseError {
+  if self.front().body == expected {
     self.advance()
   } else {
     raise ParseError::UnexpectedToken(self.front())
@@ -53,18 +53,18 @@ fn Scanner::consume(self : Self, expected : Token) -> Unit raise ParseError {
 ///|
 fn parse_module(scanner : Scanner) -> Module raise ParseError {
   scanner.consume(TypeId("module"))
-  let name = match scanner.front() {
+  let name = match scanner.front().body {
     TypeId(id) | ConstructorId(id) => id
     _ => raise ParseError::UnexpectedToken(scanner.front())
   }
   scanner.advance()
   scanner.consume(LBrace)
   let definitions : Array[Definition] = []
-  while scanner.front() != RBrace {
+  while !(scanner.front().body is RBrace) {
     let definition = parse_definition(scanner)
     definitions.push(definition)
   }
-  scanner.consume(RBrace)
+  scanner.advance()
   guard scanner.empty() else {
     raise ParseError::UnexpectedToken(scanner.front())
   }
@@ -73,12 +73,12 @@ fn parse_module(scanner : Scanner) -> Module raise ParseError {
 
 ///|
 fn parse_definition(scanner : Scanner) -> Definition raise ParseError {
-  guard scanner.front() is TypeId(name) else {
+  guard scanner.front().body is TypeId(name) else {
     raise ParseError::UnexpectedToken(scanner.front())
   }
   scanner.advance()
   scanner.consume(Equals)
-  match scanner.front() {
+  match scanner.front().body {
     LParen => {
       let fields = parse_fields(scanner)
       Product(name~, fields~)
@@ -88,13 +88,13 @@ fn parse_definition(scanner : Scanner) -> Definition raise ParseError {
       while true {
         let constructor_ = parse_constructor(scanner)
         constructors.push(constructor_)
-        if scanner.front() == Pipe {
+        if scanner.front().body is Pipe {
           scanner.consume(Pipe)
         } else {
           break
         }
       }
-      let attributes = match scanner.front() {
+      let attributes = match scanner.front().body {
         TypeId("attributes") => {
           scanner.advance()
           parse_fields(scanner)
@@ -109,11 +109,11 @@ fn parse_definition(scanner : Scanner) -> Definition raise ParseError {
 
 ///|
 fn parse_constructor(scanner : Scanner) -> Constructor raise ParseError {
-  guard scanner.front() is ConstructorId(name) else {
+  guard scanner.front().body is ConstructorId(name) else {
     raise ParseError::UnexpectedToken(scanner.front())
   }
   scanner.advance()
-  let fields = match scanner.front() {
+  let fields = match scanner.front().body {
     LParen => parse_fields(scanner)
     _ => []
   }
@@ -124,10 +124,10 @@ fn parse_constructor(scanner : Scanner) -> Constructor raise ParseError {
 fn parse_fields(scanner : Scanner) -> Array[Field] raise ParseError {
   scanner.consume(LParen)
   let fields : Array[Field] = []
-  while scanner.front() != RParen {
+  while !(scanner.front().body is RParen) {
     let field = parse_field(scanner)
     fields.push(field)
-    if scanner.front() == Comma {
+    if scanner.front().body is Comma {
       scanner.consume(Comma)
     } else {
       break
@@ -139,11 +139,11 @@ fn parse_fields(scanner : Scanner) -> Array[Field] raise ParseError {
 
 ///|
 fn parse_field(scanner : Scanner) -> Field raise ParseError {
-  guard scanner.front() is TypeId(type_) else {
+  guard scanner.front().body is TypeId(type_) else {
     raise ParseError::UnexpectedToken(scanner.front())
   }
   scanner.advance()
-  let quant = match scanner.front() {
+  let quant = match scanner.front().body {
     Question => {
       scanner.advance()
       Some(Optional)
@@ -154,7 +154,7 @@ fn parse_field(scanner : Scanner) -> Field raise ParseError {
     }
     _ => None
   }
-  let name = match scanner.front() {
+  let name = match scanner.front().body {
     TypeId(name) | ConstructorId(name) => {
       scanner.advance()
       Some(name)
