@@ -6,17 +6,17 @@ test "tokenize basics" {
     tokens,
     content=(
       #|[
-      #|  TypeId(<StringView: "foo">),
-      #|  ConstructorId(<StringView: "Bar">),
-      #|  Equals,
-      #|  Comma,
-      #|  Question,
-      #|  Pipe,
-      #|  LParen,
-      #|  RParen,
-      #|  Asterisk,
-      #|  LBrace,
-      #|  RBrace,
+      #|  { body: TypeId(<StringView: "foo">), pos: 0 },
+      #|  { body: ConstructorId(<StringView: "Bar">), pos: 4 },
+      #|  { body: Equals, pos: 8 },
+      #|  { body: Comma, pos: 10 },
+      #|  { body: Question, pos: 12 },
+      #|  { body: Pipe, pos: 14 },
+      #|  { body: LParen, pos: 16 },
+      #|  { body: RParen, pos: 18 },
+      #|  { body: Asterisk, pos: 20 },
+      #|  { body: LBrace, pos: 22 },
+      #|  { body: RBrace, pos: 24 },
       #|]
     ),
   )
@@ -30,8 +30,8 @@ test "tokenize with underscore" {
     tokens,
     content=(
       #|[
-      #|  TypeId(<StringView: "foo_bar">),
-      #|  ConstructorId(<StringView: "Baz_123">),
+      #|  { body: TypeId(<StringView: "foo_bar">), pos: 0 },
+      #|  { body: ConstructorId(<StringView: "Baz_123">), pos: 8 },
       #|]
     ),
   )
@@ -47,7 +47,10 @@ test "tokenize with comments" {
   debug_inspect(
     tokens,
     content=(
-      #|[TypeId(<StringView: "foo">), ConstructorId(<StringView: "Bar">)]
+      #|[
+      #|  { body: TypeId(<StringView: "foo">), pos: 0 },
+      #|  { body: ConstructorId(<StringView: "Bar">), pos: 52 },
+      #|]
     ),
   )
 }
