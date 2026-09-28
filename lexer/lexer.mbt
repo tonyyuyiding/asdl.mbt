@@ -1,5 +1,14 @@
 ///|
-pub(all) enum Token {
+pub(all) struct Token {
+  body : TokenBody
+  pos : Position
+} derive(Debug)
+
+///|
+pub extend Token with Debug::{to_repr}
+
+///|
+pub(all) enum TokenBody {
   TypeId(StringView)
   ConstructorId(StringView)
   Equals
@@ -14,13 +23,13 @@ pub(all) enum Token {
 } derive(Debug, Eq)
 
 ///|
-pub extend Token with Debug::{to_repr}
+pub extend TokenBody with Debug::{to_repr}
 
 ///|
-pub extend Token with Eq::{not_equal, equal}
+pub extend TokenBody with Eq::{equal, not_equal}
 
 ///|
-let operator_table : Map[Char, Token] = {
+let operator_table : Map[Char, TokenBody] = {
   '=': Equals,
   ',': Comma,
   '?': Question,
@@ -33,6 +42,9 @@ let operator_table : Map[Char, Token] = {
 }
 
 ///|
+pub type Position = Int
+
+///|
 pub suberror TokenizeError {
   UnknownSymbol(Char)
 }
@@ -40,14 +52,16 @@ pub suberror TokenizeError {
 ///|
 /// Get the next token, or `None` if the input is exhausted.
 fn next_token(scanner : @lexbuf.StringScanner) -> Token? raise TokenizeError {
+  let pos = scanner.cursor
   lexscan scanner {
-    re"^[a-z][a-zA-Z0-9_]*" as id => Some(TypeId(id))
-    re"^[A-Z][a-zA-Z0-9_]*" as id => Some(ConstructorId(id))
+    re"^[a-z][a-zA-Z0-9_]*" as id => Some(Token::{ body: TypeId(id), pos, })
+    re"^[A-Z][a-zA-Z0-9_]*" as id =>
+      Some(Token::{ body: ConstructorId(id), pos, })
     re"^[[:space:]]+" => next_token(scanner)
     re"^--[^\n]*\n?" => next_token(scanner)
     re"^." as symbol =>
       match operator_table.get(symbol) {
-        Some(operator) => Some(operator)
+        Some(body) => Some(Token::{ body, pos, })
         None => raise TokenizeError::UnknownSymbol(symbol)
       }
     re"^$" => None
