@@ -47,7 +47,7 @@ fn transform_sum(
   if attributes.is_empty() {
     [Enum(name~, cases~)]
   } else {
-    let enum_name = "_\{name}"
+    let enum_name = "\{name}Kind"
     let fields = [
       StructField::{ name: "kind", type_: enum_name, },
       ..attributes.mapi((i, field) => StructField::{
@@ -73,7 +73,11 @@ fn transform_type_name(
   name : @asdl.Identifier,
   quant : @asdl.Quantifier?,
 ) -> StringView {
-  let name = name[0:1].to_upper() + name[1:]
+  let name = name
+    .split("_")
+    .map(part => part[0:1].to_upper() + part[1:])
+    .collect()
+    .join("")
   match quant {
     None => name
     Some(Optional) => "\{name}?"
