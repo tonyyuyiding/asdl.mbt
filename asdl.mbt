@@ -11,6 +11,9 @@ pub using @lexer {
 pub using @parser {parse_tokens, type ParseError}
 
 ///|
+pub using @checker {check_types, type CheckError}
+
+///|
 pub using @backend {emit_moonbit}
 
 ///|

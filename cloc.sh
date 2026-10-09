@@ -1,0 +1,1 @@
+cloc . --exclude-dir=.mooncakes,_build,_local
