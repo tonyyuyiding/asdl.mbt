@@ -1,12 +1,13 @@
 import {
   "tonyyuyiding/asdl/lexer",
+  "tonyyuyiding/asdl/parser",
+  "tonyyuyiding/asdl/checker",
+  "tonyyuyiding/asdl/backend",
 }
 
 import {
   "moonbitlang/x/fs",
   "moonbitlang/parser/fmt",
-  "tonyyuyiding/asdl/parser",
-  "tonyyuyiding/asdl/backend",
 } for "test"
 
 options(

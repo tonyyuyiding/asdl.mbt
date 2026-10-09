@@ -13,18 +13,13 @@ fn main raise {
   let args = cmd.parse().values
   let filename = args["filename"][0]
   let target = args["target"][0]
-  let emit = match target {
-    "moonbit" => @backend.emit_moonbit
+  let source = @fs.read_file_to_string(filename)
+  let result = match target {
+    "moonbit" => @lib.asdl_to_moonbit(source)
     _ => abort("Unsupported target: \{target}")
   }
-  let module_ = filename
-    |> @fs.read_file_to_string
-    |> @lexer.tokenize
-    |> @parser.parse_tokens
-  @checker.check_types(module_)
-  let code = emit(module_)
   match args.get("output") {
-    Some([output]) => @fs.write_string_to_file(output, code)
-    _ => println(code)
+    Some([output]) => @fs.write_string_to_file(output, result)
+    _ => println(result)
   }
 }
