@@ -85,7 +85,7 @@ fn parse_definition(scanner : Scanner) -> Definition raise ParseError {
     }
     ConstructorId(_) => {
       let constructors : Array[Constructor] = []
-      while true {
+      for ;; {
         let constructor_ = parse_constructor(scanner)
         constructors.push(constructor_)
         if scanner.front().body is Pipe {
