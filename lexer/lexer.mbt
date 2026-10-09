@@ -72,11 +72,10 @@ fn next_token(scanner : @lexbuf.StringScanner) -> Token? raise TokenizeError {
 pub fn tokenize(code : StringView) -> Array[Token] raise TokenizeError {
   let scanner = @lexbuf.StringScanner::{ data: code, cursor: 0, }
   let tokens : Array[Token] = []
-  while true {
+  for ;; {
     match next_token(scanner) {
       Some(token) => tokens.push(token)
-      None => break
+      None => return tokens
     }
   }
-  tokens
 }
