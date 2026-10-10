@@ -1,7 +1,7 @@
 ///|
 pub(all) struct Token {
   body : TokenBody
-  pos : Position
+  pos : Offset
 } derive(Debug)
 
 ///|
@@ -42,7 +42,7 @@ let operator_table : Map[Char, TokenBody] = {
 }
 
 ///|
-pub type Position = Int
+pub type Offset = Int
 
 ///|
 pub suberror TokenizeError {

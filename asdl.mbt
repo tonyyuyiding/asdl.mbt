@@ -4,7 +4,7 @@ pub using @lexer {
   type Token,
   type TokenBody,
   type TokenizeError,
-  type Position,
+  type Offset,
 }
 
 ///|
