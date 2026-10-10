@@ -14,6 +14,6 @@ test "bootstrapping" {
 }
 
 ///|
-test "file Python.asdl" {
+test "example Python.asdl" {
   assert_generated_eq("examples/Python.asdl", "examples/Python.mbt")
 }
