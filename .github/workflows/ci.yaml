@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: hustcer/setup-moonbit@v1
+      - run: moon version --all
+      - run: moon check --deny-warn
+      - run: moon fmt --check
+      - run: moon test --target all
+      - run: moon test --target all --release
