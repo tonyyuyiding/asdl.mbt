@@ -4,15 +4,17 @@ version = "0.1.0"
 
 readme = "README.mbt.md"
 
-repository = ""
+repository = "https://github.com/tonyyuyiding/asdl.mbt"
 
 license = "MIT"
 
-keywords = [ ]
+keywords = [ "asdl", "parser" ]
 
 preferred_target = "native"
 
-description = ""
+supported_targets = "+all"
+
+description = "Generate AST types from ASDL (Abstract Syntax Description Language) descriptions."
 
 import {
   "moonbitlang/parser@0.3.19",
